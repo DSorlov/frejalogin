@@ -1,0 +1,18 @@
+$DomainName = "<%= domainName %>"
+$FederationBrandName = "Frejalogin SAML 2.0 IDP"
+$LogOnUri = "https://<%= serviceHost %>:<%= servicePort %>/<%= idp %>/login"
+$LogOffUri = "https://<%= serviceHost %>:<%= servicePort %>/<%= idp %>/logout"
+$IssuerUri = "https://<%= serviceHost %>:<%= servicePort %>/<%= idp %>"
+$SigningCert = "<%= signingCert %>"
+
+function MSOLConnected {
+    Get-MsolDomain -ErrorAction SilentlyContinue | out-null
+    $result = $?
+    return $result
+}
+
+if (-not (MSOLConnected)) {
+    Connect-MsolService
+}
+Set-MsolDomainAuthentication -Authentication Federated -DomainName $DomainName -FederationBrandName $FederationBrandName -SigningCertificate $SigningCert -IssuerURI $IssuerUri -PassiveLogOnUri $LogOnUri -PreferredAuthenticationProtocol SAMLP -LogOffUri $LogOffUri
+Get-MsolDomain -DomainName $DomainName

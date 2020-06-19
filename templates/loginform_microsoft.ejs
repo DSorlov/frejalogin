@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="" dir="ltr" lang="sv">
+<head>
+	<title><%= pageTitle %></title>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" name="viewport">
+	<meta content="no-cache" http-equiv="Pragma">
+	<meta content="-1" http-equiv="Expires">
+	<meta content="none" name="robots">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <link href="/resources/css/mslogin.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>        
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.15.1/dist/sweetalert2.all.min.js" integrity="sha256-sKdwf0hN7wAAcl7vOHOVl71K9dYMUxPdjjZ2Ut9tmIU=" crossorigin="anonymous"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/resources/js/microsoft.js"></script>
+
+</head>
+<body class="cb" style="display: block;">
+	<div>
+		<div>
+			<div class="background" role="presentation">
+				<div class="backgroundImage" style="background-image: url('/resources/img/background.svg');"></div>
+			</div>
+		</div>
+			<div class="outer">
+				<div class="middle">
+					<div class="inner fade-in-lightbox" >
+						<div class="lightbox-cover" ></div>
+						<div>
+							<img alt="Logo" class="logo" role="img" src="<%= logoUrl %>"> <b><%= logoText %></b>
+						</div>
+						<div>
+							<div class="">
+								<div class="animate slide-in-next">
+									<div>
+										<div class="identityBanner">
+											<div class="identity" id="displayName" title="<%= userId %>">
+												<%= userId %>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="pagination-view has-identity-banner animate slide-in-next">
+									<div>
+										<div aria-level="1" class="row text-title" role="heading" id="statusLabel">
+											Initierar..
+										</div>
+										<div class="row text-body">
+											<div class="text-block-body overflow-hidden no-margin-top" id="ProofUpDescription">
+												<%= helpText %>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+                        <form id="responseForm" method="post">
+                            <input type="hidden" name="SAMLResponse" id="SAMLResponse" value="">
+                            <input type="hidden" name="RelayState" id="RelayState" value="">
+                        </form>                
+					</div>
+					<div class="footer default new-background-image" id="footer" role="contentinfo">
+						<div>
+							<div class="footerNode text-secondary" id="footerLinks">
+								<a href="<%= termsUrl %>" id="ftrTerms">Terms of use</a> <a href="<%= privacyUrl %>" id="ftrPrivacy">Privacy &amp; cookies</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+</body>
+</html>

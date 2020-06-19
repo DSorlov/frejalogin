@@ -1,0 +1,35 @@
+{
+    "service": {
+        "hostname": "server.domain.com",
+        "port": 3000,
+        "cookie_secret": "a-secret-salt-for-the-cookies",
+        "cert_file": "./relative-path-to.crt",
+        "key_file": "./relative-path-to.key"
+    },
+    "69511aa9-8bf9-472a-a756-b091238a44e4": {
+        "domain": "myfakedomain.com",
+        "profile": "production",
+        "accounting": "true",
+        "template": "microsoft",
+        "logo_url": "/resources/img/frejalogo.png",
+        "display_name": "My Fake is Best!",
+        "terms_url": "https://www.microsoft.com/en-US/servicesagreement/",
+        "privacy_url": "https://privacy.microsoft.com/en-US/privacystatement",
+        "page_title": "Sign in to your account",
+        "help_text": "Doing the magic samba.",
+        "issuer": {
+            "name": "a_name_used_in_metadata",
+            "display_name": "a_name_used_everywhere",
+            "url": "https://your.company.website",
+            "contact": "name of contact",
+            "email": "contact@email.atyourcomany",    
+            "cert_file": "./relative-path-to.crt",
+            "key_file": "./relative-path-to.key"
+        },
+        "settings": {
+            "client_cert": "./relative-path-to.pfx",
+            "password": "abc123",
+            "minimum_level": "EXTENDED"
+        }
+    }
+}
