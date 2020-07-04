@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://img.shields.io/github/license/DSorlov/eid-provider)
 
 # frejalogin
-A minimalistic SAML2.0 Identity Provider for use with Office 365 and Freja eID all written in Node. The project uses [eid-provider](https://www.npmjs.com/package/eid-provider) to communicate with Freja eID services (minimum v0.1.3 which is not relased yet so goto the [eid-provider](https://github.com/DSorlov/eid-provider) and look for the dev-branch).
+A minimalistic SAML2.0 Identity Provider for use with Office 365 and Freja eID all written in Node. The project uses [eid-provider](https://www.npmjs.com/package/eid-provider) to communicate with Freja eID services.
 
 ## Solution Overview
 This project allows you to securly authenticate users on LOA1-LOA3 level using Freja eID er Freja eID Organisational ID.
