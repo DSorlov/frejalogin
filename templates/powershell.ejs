@@ -2,7 +2,7 @@ $DomainName = "<%= domainName %>"
 $FederationBrandName = "Frejalogin SAML 2.0 IDP"
 $LogOnUri = "https://<%= serviceHost %>:<%= servicePort %>/<%= idp %>/login"
 $LogOffUri = "https://<%= serviceHost %>:<%= servicePort %>/<%= idp %>/logout"
-$IssuerUri = "https://<%= serviceHost %>:<%= servicePort %>/<%= idp %>"
+$IssuerUri = "<%= idpName %>"
 $SigningCert = "<%= signingCert %>"
 
 function MSOLConnected {

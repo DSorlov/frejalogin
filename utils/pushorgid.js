@@ -24,7 +24,7 @@ if (!site) {
 }
 
 // Load the provider as configured
-const eidprovider   = require('eid-provider')('frejaorgid')
+const eidprovider   = require('npm eid-provider')('frejaorgid')
 const eidconfig = eidprovider.settings[config[site].profile];
 for(var override in config[site].settings) {
   if (override==='ca_cert'||override==='jwt_cert'||override==='client_cert'){
@@ -35,8 +35,13 @@ for(var override in config[site].settings) {
 }
 eidprovider.initialize(eidconfig);
 
+var whom = {
+  type: "SSN",
+  ssn: argv.id
+}
+
 // Do the stuff
-eidprovider.addOrgIdRequest(argv.id,argv.title,argv.attribute,argv.value, (status)=>{
+eidprovider.addOrgIdRequest(whom,argv.title,argv.attribute,argv.value, (status)=>{
     console.log(status);
 }, (status)=>{
     console.log(status);

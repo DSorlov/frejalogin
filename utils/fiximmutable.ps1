@@ -1,8 +1,10 @@
 Param(
     [Parameter(Mandatory=$true, Position=0, HelpMessage="Current upn?")]
     [String]$upn,
-    [Parameter(Mandatory=$true, Position=0, HelpMessage="New upn?")]
-    [String]$newname
+    [Parameter(Mandatory=$true, Position=1, HelpMessage="Immutable Id (email)?")]
+    [String]$newname,
+    [Parameter(HelpMessage="Change UPN to the new name (for faux-federated domains)")]
+    [Switch]$fixdomain
 )
 
 function MSOLConnected {
@@ -15,5 +17,8 @@ if (-not (MSOLConnected)) {
     Connect-MsolService
 }
 
-Set-MsolUserPrincipalName -UserPrincipalName $upn -NewUserPrincipalName $newname
-Set-MsolUser -UserPrincipalName $newname -ImmutableId $([System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($newname)))
+Set-MsolUser -UserPrincipalName $upn -ImmutableId $([System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($newname)))
+
+if ($fixdomain) {
+    Set-MsolUserPrincipalName -UserPrincipalName $upn -NewUserPrincipalName $newname
+}

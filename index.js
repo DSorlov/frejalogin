@@ -64,15 +64,13 @@ function strbool(value) {
   return value=="true" ? true : false;
 }
 
-// Read a certificate file, strip it from junk and remove all line endings.
-function getCertificate(certfile) {
-    var cert = fs.readFileSync(path.join(__dirname, certfile))
-    var pem = /-----BEGIN (\w*)-----([^-]*)-----END (\w*)-----/g.exec(cert.toString());
-    if (pem && pem.length > 0) {
-      return pem[2].replace(/[\n|\r\n]/g, '');
-    }
-    return null;
-};
+function stripCert(certificateData) {
+  var pem = /-----BEGIN (\w*)-----([^-]*)-----END (\w*)-----/g.exec(certificateData.toString());
+  if (pem && pem.length > 0) {
+    return pem[2].replace(/[\n|\r\n]/g, '');
+  }
+  return null;
+}
 
 // Resolve the hostname for this host
 function getHost(req, endpointPath) { 
@@ -113,7 +111,7 @@ function buildSamlResponse(options) {
   sig.keyInfoProvider = {
     getKeyInfo: function (key, prefix) {
       prefix = prefix ? prefix + ':' : prefix;
-      return "<" + prefix + "X509Data><" + prefix + "X509Certificate>" + options.cert + "</" + prefix + "X509Certificate></" + prefix + "X509Data>";
+      return "<" + prefix + "X509Data><" + prefix + "X509Certificate>" + stripCert(options.cert) + "</" + prefix + "X509Certificate></" + prefix + "X509Data>";
     }
   };
 
@@ -131,13 +129,13 @@ if (process.argv && process.argv[2] && process.argv[2]==='-generate') {
   console.log("Generating files..")
   for(var idp in config) {
     if (idp!="service") {
-      var signingCert = getCertificate(config[idp].issuer.cert_file);
+      var signingCert = stripCert(fs.readFileSync(path.join(__dirname, config[idp].issuer.cert_file)));
       var idpXml = templates.metadata({
         signingPem:        signingCert,
         redirectEndpoint:  "https://"+config.service.hostname+":"+config.service.port+"/"+idp+"/login",
         postEndpoint:      "https://"+config.service.hostname+":"+config.service.port+"/"+idp+"/login",
         claimTypes:        outboundClaims,
-        issuer:            config[idp].issuer.name,
+        issuer:            "https://"+config.service.hostname+":"+config.service.port+"/"+idp,
         issuerContact:     config[idp].issuer.contact,
         issuerEmail:       config[idp].issuer.email,
         issuerDisplayName: config[idp].issuer.display_name,
@@ -151,6 +149,7 @@ if (process.argv && process.argv[2] && process.argv[2]==='-generate') {
         serviceHost: config.service.hostname,
         servicePort: config.service.port,
         idp: idp,
+        idpName: "https://"+config.service.hostname+":"+config.service.port+"/"+idp,
         signingCert: signingCert
       });
       fs.writeFileSync(path.join(__dirname,`./data/powershell/${config[idp].domain.replace(".","_")}.ps1`), idpPS, (err)=>{
@@ -181,11 +180,11 @@ app.get('/:site/FederationMetadata/2007-06/FederationMetadata.xml', (req, res) =
 
   res.set('Content-Type', 'application/xml');
   res.send(templates.metadata({
-    signingPem:        getCertificate(config[site].issuer.cert_file),
+    signingPem:        stripCert(fs.readFileSync(path.join(__dirname, config[idp].issuer.cert_file))),
     redirectEndpoint:  "https://"+config.service.hostname+":"+config.service.port+"/"+idp+"/login",
     postEndpoint:      "https://"+config.service.hostname+":"+config.service.port+"/"+idp+"/login",
     claimTypes:        outboundClaims,
-    issuer:            config[site].issuer.name,
+    issuer:            "https://"+config.service.hostname+":"+config.service.port+"/"+idp,
     issuerContact:     config[site].issuer.contact,
     issuerEmail:       config[site].issuer.email,
     issuerDisplayName: config[site].issuer.display_name,
@@ -280,7 +279,7 @@ io.on("connection", function(socket) {
         var options = {
           signatureAlgorithm:       'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
           digestAlgorithm:          'http://www.w3.org/2001/04/xmlenc#sha256',
-          cert:                     getCertificate(config[site].issuer.cert_file),
+          cert:                     fs.readFileSync(path.join(__dirname, config[site].issuer.cert_file)),
           key:                      fs.readFileSync(path.join(__dirname, config[site].issuer.key_file)),
           issuer:                   "https://"+config.service.hostname+':'+config.service.port+'/'+site,
           audiences:                'urn:federation:MicrosoftOnline',
