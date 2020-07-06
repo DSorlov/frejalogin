@@ -2,6 +2,7 @@
 /.vscode
 /data/certs/*.crt
 /data/certs/*.key
+/data/certs/*.pfx
 /data/accounting/*.log
 /data/powershell/*.ps1
 /data/metadata/*.xml
