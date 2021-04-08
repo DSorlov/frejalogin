@@ -254,8 +254,8 @@ io.on("connection", function(socket) {
 
     const site = socket.handshake.session.service;
 
-    const eidprovider   = require('eid-provider')('frejaorgid')
-    const eidconfig = eidprovider.settings[config[site].profile];
+    const eidprovider = require('eid');
+    var eidconfig = eid.configFactory({clientType: 'frejaeid', enviroment: config[site].profile});
     for(var override in config[site].settings) {
       if (override==='ca_cert'||override==='jwt_cert'||override==='client_cert'){
         eidconfig[override] = fs.readFileSync(path.join(__dirname, config[site].settings[override]));
@@ -263,13 +263,13 @@ io.on("connection", function(socket) {
         eidconfig[override] = config[site].settings[override];
       }
     }
-    eidprovider.initialize(eidconfig);
+    var eidclient = eid.clientFactory(eidconfig);
     
     if (config[site].accounting==='true') {
       fs.appendFile(path.join(__dirname,`./data/accunting/${config[site].domain.replace(".","_")}.log`), `${getInstant(new Date())},${socket.handshake.session.requestUser}\r\n`, (err)=>{} );
     }
 
-    eidprovider.authRequest(socket.handshake.session.requestUser, (data)=>{
+    eidclient.authRequest(socket.handshake.session.requestUser, (data)=>{
         socket.emit("authResponse", { status: data.status, code: data.code });
     }, (data)=>{
       socket.emit("authResponse", { status: data.status, code: data.code });
